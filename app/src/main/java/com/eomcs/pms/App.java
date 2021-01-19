@@ -2,44 +2,49 @@ package com.eomcs.pms;
 
 public class App {
 
+
+
   public static void main(String[] args) {
-    System.out.println("[회원]");
+    loop:
+      while (true) {
+        String command = Prompt.String("명령> ");
 
-
-    java.io.InputStream keyboard = System.in;
-    java.util.Scanner keyScan = new java.util.Scanner(keyboard);
-
-    System.out.print("번호? ");
-    String id = keyScan.nextLine();
-
-    System.out.print("이름? ");
-    String name = keyScan.nextLine();
-
-    System.out.print("이메일? ");
-    String eMail = keyScan.nextLine();
-
-    System.out.print("암호? ");
-    String pw = keyScan.nextLine();
-
-    System.out.print("사진? ");
-    String pic = keyScan.nextLine();
-
-    System.out.print("전화? ");
-    String tel = keyScan.nextLine();
-
-    java.sql.Date now = new java.sql.Date(System.currentTimeMillis());
-
-    keyScan.close();
-
-    System.out.println("-------------------------------------");
-    System.out.printf("번호: %s\n", id);
-    System.out.printf("이름: %s\n", name);
-    System.out.println("이메일:"+eMail);
-    System.out.printf("암호: %s\n", pw);
-    System.out.printf("사진: %s\n", pic);
-    System.out.printf("전화: %s\n", tel);
-    System.out.printf("가입일: %s\n", now);
-
+        switch (command) {
+          case "/member/add":
+            MemberHandler.add();
+            break;
+          case "/member/list":
+            MemberHandler.list();
+            break;
+          case "/project/add":
+            ProjectHandler.add();
+            break;
+          case "/project/list":
+            ProjectHandler.list();
+            break;
+          case "/task/add":
+            TaskHandler.add();
+            break;
+          case "/task/list":
+            TaskHandler.list();
+            break;
+          case "quit":
+          case "exit":
+            System.out.println("안녕!");
+            break loop;
+          default:
+            System.out.println("실행할 수 없는 명령입니다.");
+        }
+        System.out.println(); // 이전 명령의 실행을 구분하기 위해 빈 줄 출력
+      }
+    Prompt.close();
   }
-
 }
+
+
+
+
+
+
+
+
