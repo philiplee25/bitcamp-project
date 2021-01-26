@@ -1,15 +1,27 @@
 package com.eomcs.pms.handler;
 
 import com.eomcs.pms.domain.Project;
-import com.eomcs.util.Prompt;
+import com.eomcs.pms.util.Prompt;
 
 public class ProjectHandler {
 
   static final int LENGTH = 100;
+
+  // 의존 객체(dependency)를 담을 인스턴스 필드
+  // - 메서드가 작업할 때 사용할 객체를 담는다.
+  MemberHandler memberList;
+
   Project[] projects = new Project[LENGTH];
   int size = 0;
 
-  public void add(MemberHandler memberList) {
+  // 생성자 정의
+  // - ProjectHandler 가 의존하는 객체를 반드시 주입하도록 강요한다.
+  // - 다른 패키지에서 생성자를 호출할 수 있도록 공개한다.
+  public ProjectHandler(MemberHandler memberHandler) {
+    this.memberList = memberHandler;
+  }
+
+  public void add() {
     System.out.println("[프로젝트 등록]");
 
     Project p = new Project();
@@ -24,8 +36,8 @@ public class ProjectHandler {
       if (name.length() == 0) {
         System.out.println("프로젝트 등록을 취소합니다.");
         return;
-      } 
-      if (memberList.exist(name)) {
+      }
+      if (this.memberList.exist(name)) {
         p.owner = name;
         break;
       }
@@ -37,7 +49,7 @@ public class ProjectHandler {
       String name = Prompt.inputString("팀원?(완료: 빈 문자열) ");
       if (name.length() == 0) {
         break;
-      } else if (memberList.exist(name)) {
+      } else if (this.memberList.exist(name)) {
         if (!p.members.isEmpty()) {
           p.members += ",";
         }
@@ -55,17 +67,11 @@ public class ProjectHandler {
 
     for (int i = 0; i < size; i++) {
       Project p = projects[i];
-      System.out.printf("%d, %s, %s, %s, %s, [%s]\n",
-          p.no, p.title, p.startDate, p.endDate, p.owner, p.members);
+      System.out.printf("%d, %s, %s, %s, %s, [%s]\n", p.no, p.title, p.startDate, p.endDate,
+          p.owner, p.members);
     }
   }
 
 }
-
-
-
-
-
-
 
 

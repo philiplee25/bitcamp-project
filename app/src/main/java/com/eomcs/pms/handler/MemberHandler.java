@@ -1,18 +1,13 @@
 package com.eomcs.pms.handler;
 
 import com.eomcs.pms.domain.Member;
-import com.eomcs.util.Prompt;
+import com.eomcs.pms.util.Prompt;
 
 public class MemberHandler {
 
-  // 회원 정보를 저장할 메모리의 설계도
-  // - 각 항목의 데이터를 저장할 변수를 선언한다.
-  // - 이 변수를 "필드(field)"라고 부른다.
-  //
-
   static final int LENGTH = 100;
 
-  Member[] members = new Member[LENGTH];  // 레퍼런스 배열 준비  
+  Member[] members = new Member[LENGTH]; // 레퍼런스 배열 준비
   int size = 0;
 
   public void add() {
@@ -31,11 +26,10 @@ public class MemberHandler {
     this.members[this.size++] = m;
   }
 
-
-  public  void list() {
+  public void list() {
     System.out.println("[회원 목록]");
 
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < this.size; i++) {
       Member m = this.members[i];
       // 번호, 이름, 이메일, 전화, 가입일
       System.out.printf("%d, %s, %s, %s, %s\n", // 출력 형식 지정
@@ -52,9 +46,5 @@ public class MemberHandler {
     return false;
   }
 }
-
-
-
-
 
 

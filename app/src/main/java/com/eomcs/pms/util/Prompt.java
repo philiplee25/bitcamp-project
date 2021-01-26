@@ -1,4 +1,4 @@
-package com.eomcs.util;
+package com.eomcs.pms.util;
 
 import java.sql.Date;
 import java.util.Scanner;
@@ -10,7 +10,7 @@ public class Prompt {
 
   static Scanner keyboardScan = new Scanner(System.in);
 
-  // 메서드 접근 범위 조정 
+  // 메서드 접근 범위 조정
   // - public : 다른 패키지에서 사용할 수 있음.
   // - (default): 같은 패키지에 소속된 경우에만 사용할 수 있음.
   // - protected: 같은 패키지 및 자손 클래스인 경우 사용할 수 있음.
