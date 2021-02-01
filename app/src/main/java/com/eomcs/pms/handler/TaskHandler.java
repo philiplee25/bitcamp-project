@@ -6,18 +6,13 @@ import com.eomcs.util.Prompt;
 
 public class TaskHandler {
 
-  static final int LENGTH = 100;
 
-  // 의존 객체(dependency)를 담을 인스턴스 필드
-  // - 메서드가 작업할 때 사용할 객체를 담는다.
   MemberHandler memberList;
 
-  Task[] tasks = new Task[LENGTH];
-  int size = 0;
+  Node first;
+  Node last;
+  int size = 0;  
 
-  // 생성자
-  // - TaskHandler가 의존하는 객체를 반드시 주입하도록 강요한다.
-  // - 다른 패키지에서 생성자를 호출할 수 있도록 공개한다.
   public TaskHandler(MemberHandler memberHandler) {
     this.memberList = memberHandler;
   }
@@ -37,17 +32,33 @@ public class TaskHandler {
       return;
     }
 
-    this.tasks[this.size++] = t;
+    Node node = new Node(t);
+
+    if (last == null) {
+      last = node;
+      first = node;
+    } else { 
+      last.next = node; 
+      node.prev = last; 
+      last = node; 
+    }
+
+    this.size++;
+    System.out.println("작업을 등록하였습니다.");
   }
 
   public void list() {
     System.out.println("[작업 목록]");
 
-    for (int i = 0; i < this.size; i++) {
-      Task t = this.tasks[i];
+    Node cursor = first;
 
-      System.out.printf("%d, %s, %s, %s, %s\n", t.no, t.content, t.deadline,
-          getStatusLabel(t.status), t.owner);
+    while (cursor != null) {
+      Task t = cursor.task;
+
+      System.out.printf("%d, %s, %s, %s, %s\n", 
+          t.no, t.content, t.deadline, getStatusLabel(t.status), t.owner);
+
+      cursor = cursor.next;
     }
   }
 
@@ -69,6 +80,8 @@ public class TaskHandler {
 
   }
 
+
+
   public void update() {
     System.out.println("[작업 변경]");
 
@@ -82,12 +95,10 @@ public class TaskHandler {
 
     String content = Prompt.inputString(String.format("내용(%s)? ", task.content));
     Date deadline = Prompt.inputDate(String.format("마감일(%s)? ", task.deadline));
-
-    int status = Prompt
-        .inputInt(String.format("상태(%s)?\n0: 신규\n1: 진행중\n2: 완료\n> ", getStatusLabel(task.status)));
-
+    int status = Prompt.inputInt(String.format(
+        "상태(%s)?\n0: 신규\n1: 진행중\n2: 완료\n> ", getStatusLabel(task.status)));
     String owner = inputMember(String.format("담당자(%s)?(취소: 빈 문자열) ", task.owner));
-    if (owner == null) {
+    if(owner == null) {
       System.out.println("작업 변경을 취소합니다.");
       return;
     }
@@ -106,14 +117,13 @@ public class TaskHandler {
     }
   }
 
-
   public void delete() {
     System.out.println("[작업 삭제]");
 
     int no = Prompt.inputInt("번호? ");
 
-    int i = indexOf(no);
-    if (i == -1) {
+    Task task = findByNo(no);
+    if (task == null) {
       System.out.println("해당 번호의 작업이 없습니다.");
       return;
     }
@@ -121,10 +131,30 @@ public class TaskHandler {
     String input = Prompt.inputString("정말 삭제하시겠습니까?(y/N) ");
 
     if (input.equalsIgnoreCase("Y")) {
-      for (int x = i + 1; x < this.size; x++) {
-        this.tasks[x - 1] = this.tasks[x];
+      Node cursor = first;
+      while (cursor != null) {
+        if (cursor.task == task) {
+          if (first == last) {
+            first = last = null;
+            break;
+          }
+          if (cursor == first) {
+            first = cursor.next;
+            cursor.prev = null;
+          } else {
+            cursor.prev.next = cursor.next;
+            if (cursor.next != null) {
+              cursor.next.prev = cursor.prev;
+            }
+          }
+          if (cursor == last) {
+            last = cursor.prev;
+          }
+
+          break;
+        }
+        cursor = cursor.next;
       }
-      tasks[--this.size] = null; // 앞으로 당긴 후 맨 뒤의 항목은 null로 설정한다.
 
       System.out.println("작업을 삭제하였습니다.");
 
@@ -134,24 +164,17 @@ public class TaskHandler {
 
   }
 
-  // 작업 번호에 해당하는 인스턴스를 배열에서 찾아 그 인덱스를 리턴한다.
-  int indexOf(int taskNo) {
-    for (int i = 0; i < this.size; i++) {
-      Task task = this.tasks[i];
-      if (task.no == taskNo) {
-        return i;
-      }
-    }
-    return -1;
-  }
-
   // 작업 번호에 해당하는 인스턴스를 찾아 리턴한다.
   Task findByNo(int taskNo) {
-    int i = indexOf(taskNo);
-    if (i == -1)
-      return null;
-    else
-      return this.tasks[i];
+    Node cursor = first;
+    while (cursor != null) {
+      Task t = cursor.task;
+      if (t.no == taskNo) {
+        return t;
+      }
+      cursor = cursor.next;
+    }
+    return null;
   }
 
   String inputMember(String promptTitle) {
@@ -167,19 +190,24 @@ public class TaskHandler {
     }
   }
 
-
   String getStatusLabel(int status) {
-    String stateLabel = null;
     switch (status) {
       case 1:
         return "진행중";
-
       case 2:
         return "완료";
-
       default:
         return "신규";
     }
   }
 
+  static class Node {
+    Task task;
+    Node next;
+    Node prev;
+
+    Node(Task t) {
+      this.task = t;
+    }
+  }
 }
