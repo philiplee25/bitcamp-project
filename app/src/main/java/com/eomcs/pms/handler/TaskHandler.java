@@ -40,8 +40,8 @@ public class TaskHandler {
     Object[] list = taskList.toArray();
     for (Object obj : list) {
       Task t = (Task) obj;
-      System.out.printf("%d, %s, %s, %s, %s\n", t.getNo(), t.getContent(), t.getDeadline(),
-          getStatusLabel(t.getStatus()), t.getOwner());
+      System.out.printf("%d, %s, %s, %s, %s\n", 
+          t.getNo(), t.getContent(), t.getDeadline(), getStatusLabel(t.getStatus()), t.getOwner());
     }
   }
 
@@ -78,11 +78,10 @@ public class TaskHandler {
 
     String content = Prompt.inputString(String.format("내용(%s)? ", task.getContent()));
     Date deadline = Prompt.inputDate(String.format("마감일(%s)? ", task.getDeadline()));
-    int status = Prompt.inputInt(
-        String.format("상태(%s)?\n0: 신규\n1: 진행중\n2: 완료\n> ", getStatusLabel(task.getStatus())));
-    String owner =
-        memberHandler.inputMember(String.format("담당자(%s)?(취소: 빈 문자열) ", task.getOwner()));
-    if (owner == null) {
+    int status = Prompt.inputInt(String.format(
+        "상태(%s)?\n0: 신규\n1: 진행중\n2: 완료\n> ", getStatusLabel(task.getStatus())));
+    String owner = memberHandler.inputMember(String.format("담당자(%s)?(취소: 빈 문자열) ", task.getOwner()));
+    if(owner == null) {
       System.out.println("작업 변경을 취소합니다.");
       return;
     }
@@ -115,7 +114,7 @@ public class TaskHandler {
     String input = Prompt.inputString("정말 삭제하시겠습니까?(y/N) ");
 
     if (input.equalsIgnoreCase("Y")) {
-      taskList.delete(null);
+      taskList.delete(task);
       System.out.println("작업을 삭제하였습니다.");
 
     } else {

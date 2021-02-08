@@ -44,8 +44,8 @@ public class ProjectHandler {
     Object[] list = projectList.toArray();
     for (Object obj : list) {
       Project p = (Project) obj;
-      System.out.printf("%d, %s, %s, %s, %s, [%s]\n", p.getNo(), p.getTitle(), p.getStartDate(),
-          p.getEndDate(), p.getOwner(), p.getMembers());
+      System.out.printf("%d, %s, %s, %s, %s, [%s]\n",
+          p.getNo(), p.getTitle(), p.getStartDate(), p.getEndDate(), p.getOwner(), p.getMembers());
     }
   }
 
@@ -85,15 +85,14 @@ public class ProjectHandler {
     Date startDate = Prompt.inputDate(String.format("시작일(%s)? ", project.getStartDate()));
     Date endDate = Prompt.inputDate(String.format("종료일(%s)? ", project.getEndDate()));
 
-    String owner =
-        memberHandler.inputMember(String.format("만든이(%s)?(취소: 빈 문자열) ", project.getOwner()));
+    String owner = memberHandler.inputMember(String.format("만든이(%s)?(취소: 빈 문자열) ", project.getOwner()));
     if (owner == null) {
       System.out.println("프로젝트 변경을 취소합니다.");
       return;
     }
 
-    String members =
-        memberHandler.inputMembers(String.format("팀원(%s)?(완료: 빈 문자열) ", project.getMembers()));
+    String members = memberHandler.inputMembers(
+        String.format("팀원(%s)?(완료: 빈 문자열) ", project.getMembers()));
 
     String input = Prompt.inputString("정말 변경하시겠습니까?(y/N) ");
 
@@ -119,7 +118,7 @@ public class ProjectHandler {
 
     Project project = findByNo(no);
     if (project == null) {
-      System.out.println("해당 번호의 프로젝트이 없습니다.");
+      System.out.println("해당 번호의 프로젝트가 없습니다.");
       return;
     }
 
@@ -127,24 +126,31 @@ public class ProjectHandler {
 
     if (input.equalsIgnoreCase("Y")) {
       projectList.delete(project);
-      System.out.println("프로젝트를 삭제하였습니다.");
+      System.out.println("프로젝트을 삭제하였습니다.");
 
     } else {
       System.out.println("프로젝트 삭제를 취소하였습니다.");
     }
+
   }
 
-
-  private Project findByNo(int boardNo) {
+  private Project findByNo(int projectNo) {
     Object[] list = projectList.toArray();
     for (Object obj : list) {
       Project p = (Project) obj;
-      if (p.getNo() == boardNo) {
+      if (p.getNo() == projectNo) {
         return p;
       }
     }
     return null;
   }
+
 }
+
+
+
+
+
+
 
 

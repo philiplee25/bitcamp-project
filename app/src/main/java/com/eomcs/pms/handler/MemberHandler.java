@@ -119,7 +119,7 @@ public class MemberHandler {
       String name = Prompt.inputString(promptTitle);
       if (name.length() == 0) {
         return null;
-      }
+      } 
       if (findByName(name) != null) {
         return name;
       }
@@ -142,7 +142,6 @@ public class MemberHandler {
     }
   }
 
-
   private Member findByNo(int boardNo) {
     Object[] list = memberList.toArray();
     for (Object obj : list) {
@@ -154,17 +153,20 @@ public class MemberHandler {
     return null;
   }
 
-  private Member findByName(String memberName) {
+  private Member findByName(String name) {
     Object[] list = memberList.toArray();
     for (Object obj : list) {
       Member m = (Member) obj;
-      if (m.getName() == memberName) {
+      if (m.getName().equals(name)) {
         return m;
       }
     }
     return null;
   }
-
 }
+
+
+
+
 
 

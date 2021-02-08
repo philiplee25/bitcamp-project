@@ -33,8 +33,13 @@ public class BoardHandler {
     for (Object obj : list) {
       Board b = (Board) obj;
       // 번호, 제목, 등록일, 작성자, 조회수, 좋아요
-      System.out.printf("%d, %s, %s, %s, %d, %d\n", b.getNo(), b.getTitle(), b.getRegisteredDate(),
-          b.getWriter(), b.getViewCount(), b.getLike());
+      System.out.printf("%d, %s, %s, %s, %d, %d\n", 
+          b.getNo(), 
+          b.getTitle(), 
+          b.getRegisteredDate(), 
+          b.getWriter(), 
+          b.getViewCount(),
+          b.getLike());
     }
   }
 
@@ -99,7 +104,7 @@ public class BoardHandler {
     String input = Prompt.inputString("정말 삭제하시겠습니까?(y/N) ");
 
     if (input.equalsIgnoreCase("Y")) {
-      boardList.delete(board); //
+      boardList.delete(board); // 오버로딩한 메서드를 사용하여 삭제한다.
 
       System.out.println("게시글을 삭제하였습니다.");
 
@@ -121,5 +126,9 @@ public class BoardHandler {
   }
 
 }
+
+
+
+
 
 
