@@ -5,12 +5,14 @@ import com.eomcs.pms.handler.MemberHandler;
 import com.eomcs.pms.handler.ProjectHandler;
 import com.eomcs.pms.handler.TaskHandler;
 import com.eomcs.util.Prompt;
+import com.eomcs.util.Queue;
 import com.eomcs.util.Stack;
 
 public class App {
 
   // 사용자가 입력한 명령을 저장할 컬렉션 객체 준비
   static Stack commandStack = new Stack();
+  static Queue commandQueue = new Queue();
 
 
   public static void main(String[] args) throws CloneNotSupportedException {
@@ -29,6 +31,7 @@ public class App {
 
         // 사용자가 입력한 명령을 보관해둔다.
         commandStack.push(command);
+        commandQueue.offer(command);
 
         switch (command) {
           case "/member/add":
@@ -94,6 +97,9 @@ public class App {
           case "history":   // <== history 명령 추가
             printCommandHistory();
             break;
+          case "history2":   // <== history2 명령 추가
+            printCommandHistory2();
+            break;
           case "quit":
           case "exit":
             System.out.println("안녕!");
@@ -115,6 +121,23 @@ public class App {
     int count = 0;
     while (stack.size() > 0) {
       System.out.println(stack.pop());
+      if ((++count % 5) == 0) {
+        String input = Prompt.inputString(": ");
+        if (input.equalsIgnoreCase("q")) {
+          break;
+        }
+      }
+    }
+  }
+
+  static void printCommandHistory2() throws CloneNotSupportedException {
+
+    // 명령어가 들어 있는 큐를 복제한다.
+    Queue queue  = commandQueue.clone();
+
+    int count = 0;
+    while (queue.size() > 0) {
+      System.out.println(queue.poll());
       if ((++count % 5) == 0) {
         String input = Prompt.inputString(": ");
         if (input.equalsIgnoreCase("q")) {
