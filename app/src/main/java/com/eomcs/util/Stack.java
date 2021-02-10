@@ -28,4 +28,23 @@ public class Stack extends List implements Cloneable {
     // 3) 복제한 스택을 리턴한다.
     return stack;
   }
+
+  @Override
+  public Iterator iterator() throws CloneNotSupportedException {
+    Stack stack = this.clone();
+
+    return new Iterator() {
+      @Override
+      public boolean hasNext() {
+        return stack.size() > 0;
+      }
+
+      @Override
+      public Object next() {
+        return stack.pop();
+      }
+    };
+  }
+
+
 }
