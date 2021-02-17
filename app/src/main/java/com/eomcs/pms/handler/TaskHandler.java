@@ -1,14 +1,14 @@
 package com.eomcs.pms.handler;
 
 import java.sql.Date;
+import java.util.Iterator;
+import java.util.LinkedList;
 import com.eomcs.pms.domain.Task;
-import com.eomcs.util.Iterator;
-import com.eomcs.util.List;
 import com.eomcs.util.Prompt;
 
 public class TaskHandler {
 
-  private List taskList = new List();
+  private LinkedList<Task> taskList = new LinkedList<>();
 
   private MemberHandler memberHandler;
 
@@ -38,10 +38,10 @@ public class TaskHandler {
   public void list() throws CloneNotSupportedException {
     System.out.println("[작업 목록]");
 
-    Iterator iterator = taskList.iterator();
+    Iterator<Task> iterator = taskList.iterator();
 
     while (iterator.hasNext()) {
-      Task t = (Task) iterator.next();
+      Task t = iterator.next();
       System.out.printf("%d, %s, %s, %s, %s\n", 
           t.getNo(), t.getContent(), t.getDeadline(), getStatusLabel(t.getStatus()), t.getOwner());
     }
@@ -116,7 +116,7 @@ public class TaskHandler {
     String input = Prompt.inputString("정말 삭제하시겠습니까?(y/N) ");
 
     if (input.equalsIgnoreCase("Y")) {
-      taskList.delete(task);
+      taskList.remove(task);
       System.out.println("작업을 삭제하였습니다.");
 
     } else {
@@ -137,9 +137,8 @@ public class TaskHandler {
   }
 
   private Task findByNo(int taskNo) {
-    Object[] list = taskList.toArray();
-    for (Object obj : list) {
-      Task t = (Task) obj;
+    Task[] list = taskList.toArray(new Task[taskList.size()]);
+    for (Task t : list) {
       if (t.getNo() == taskNo) {
         return t;
       }
