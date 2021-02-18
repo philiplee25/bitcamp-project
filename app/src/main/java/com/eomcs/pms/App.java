@@ -3,7 +3,11 @@ package com.eomcs.pms;
 import java.util.ArrayDeque;
 import java.util.Iterator;
 import java.util.LinkedList;
-import com.eomcs.pms.handler.BoardHandler;
+import com.eomcs.pms.handler.BoardAddHandler;
+import com.eomcs.pms.handler.BoardDeleteHandler;
+import com.eomcs.pms.handler.BoardDetailHandler;
+import com.eomcs.pms.handler.BoardListHandler;
+import com.eomcs.pms.handler.BoardUpdateHandler;
 import com.eomcs.pms.handler.MemberHandler;
 import com.eomcs.pms.handler.ProjectHandler;
 import com.eomcs.pms.handler.TaskHandler;
@@ -18,7 +22,12 @@ public class App {
 
   public static void main(String[] args) throws CloneNotSupportedException {
 
-    BoardHandler boardHandler = new BoardHandler();
+
+    BoardAddHandler boardAddHandler = new BoardAddHandler();
+    BoardListHandler boardListHandler = new BoardListHandler();
+    BoardDetailHandler boardDetailHandler = new BoardDetailHandler();
+    BoardUpdateHandler boardUpdateHandler = new BoardUpdateHandler();
+    BoardDeleteHandler boardDeleteHandler = new BoardDeleteHandler();
     MemberHandler memberHandler = new MemberHandler();
     ProjectHandler projectHandler = new ProjectHandler(memberHandler);
     TaskHandler taskHandler = new TaskHandler(memberHandler);
@@ -82,19 +91,19 @@ public class App {
               taskHandler.delete();
               break;
             case "/board/add":
-              boardHandler.add();
+              boardAddHandler.add();
               break;
             case "/board/list":
-              boardHandler.list();
+              boardListHandler.list();
               break;
             case "/board/detail":
-              boardHandler.detail();
+              boardDetailHandler.detail();
               break;  
             case "/board/update":
-              boardHandler.update();
+              boardUpdateHandler.update();
               break; 
             case "/board/delete":
-              boardHandler.delete();
+              boardDeleteHandler.delete();
               break;
             case "history":
               printCommandHistory(commandStack.iterator());
