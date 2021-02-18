@@ -1,13 +1,15 @@
 package com.eomcs.pms.handler;
 
 import java.sql.Date;
-import java.util.ArrayList;
+import java.util.List;
 import com.eomcs.pms.domain.Board;
 import com.eomcs.util.Prompt;
 
-public class BoardAddHandler {
+public class BoardAddHandler extends AbstractBoardHandler {
 
-  private ArrayList<Board> boardList = new ArrayList<>();
+  public BoardAddHandler(List<Board> boardList) {
+    super(boardList);
+  }
 
   public void add() {
     System.out.println("[게시글 등록]");
@@ -24,9 +26,6 @@ public class BoardAddHandler {
 
     System.out.println("게시글을 등록하였습니다.");
   }
-
-
-
 }
 
 

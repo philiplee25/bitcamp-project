@@ -1,16 +1,33 @@
 package com.eomcs.pms;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
+import com.eomcs.pms.domain.Board;
+import com.eomcs.pms.domain.Member;
+import com.eomcs.pms.domain.Project;
+import com.eomcs.pms.domain.Task;
 import com.eomcs.pms.handler.BoardAddHandler;
 import com.eomcs.pms.handler.BoardDeleteHandler;
 import com.eomcs.pms.handler.BoardDetailHandler;
 import com.eomcs.pms.handler.BoardListHandler;
 import com.eomcs.pms.handler.BoardUpdateHandler;
-import com.eomcs.pms.handler.MemberHandler;
-import com.eomcs.pms.handler.ProjectHandler;
-import com.eomcs.pms.handler.TaskHandler;
+import com.eomcs.pms.handler.MemberAddHandler;
+import com.eomcs.pms.handler.MemberDeleteHandler;
+import com.eomcs.pms.handler.MemberDetailHandler;
+import com.eomcs.pms.handler.MemberListHandler;
+import com.eomcs.pms.handler.MemberUpdateHandler;
+import com.eomcs.pms.handler.ProjectAddHandler;
+import com.eomcs.pms.handler.ProjectDeleteHandler;
+import com.eomcs.pms.handler.ProjectDetailHandler;
+import com.eomcs.pms.handler.ProjectListHandler;
+import com.eomcs.pms.handler.ProjectUpdateHandler;
+import com.eomcs.pms.handler.TaskAddHandler;
+import com.eomcs.pms.handler.TaskDeleteHandler;
+import com.eomcs.pms.handler.TaskDetailHandler;
+import com.eomcs.pms.handler.TaskListHandler;
+import com.eomcs.pms.handler.TaskUpdateHandler;
 import com.eomcs.util.Prompt;
 
 public class App {
@@ -22,15 +39,33 @@ public class App {
 
   public static void main(String[] args) throws CloneNotSupportedException {
 
+    ArrayList<Board> boardList = new ArrayList<>();
+    BoardAddHandler boardAddHandler = new BoardAddHandler(boardList);
+    BoardListHandler boardListHandler = new BoardListHandler(boardList);
+    BoardDetailHandler boardDetailHandler = new BoardDetailHandler(boardList);
+    BoardUpdateHandler boardUpdateHandler = new BoardUpdateHandler(boardList);
+    BoardDeleteHandler boardDeleteHandler = new BoardDeleteHandler(boardList);
 
-    BoardAddHandler boardAddHandler = new BoardAddHandler();
-    BoardListHandler boardListHandler = new BoardListHandler();
-    BoardDetailHandler boardDetailHandler = new BoardDetailHandler();
-    BoardUpdateHandler boardUpdateHandler = new BoardUpdateHandler();
-    BoardDeleteHandler boardDeleteHandler = new BoardDeleteHandler();
-    MemberHandler memberHandler = new MemberHandler();
-    ProjectHandler projectHandler = new ProjectHandler(memberHandler);
-    TaskHandler taskHandler = new TaskHandler(memberHandler);
+    ArrayList<Member> memberList = new ArrayList<>();
+    MemberAddHandler memberAddHandler = new MemberAddHandler(memberList);
+    MemberListHandler memberListHandler = new MemberListHandler(memberList);
+    MemberDetailHandler memberDetailHandler = new MemberDetailHandler(memberList);
+    MemberUpdateHandler memberUpdateHandler = new MemberUpdateHandler(memberList);
+    MemberDeleteHandler memberDeleteHandler = new MemberDeleteHandler(memberList);
+
+    LinkedList<Project> projectList = new LinkedList<>();
+    ProjectAddHandler projectAddHandler = new ProjectAddHandler(projectList, memberListHandler);
+    ProjectListHandler projecListHandler = new ProjectListHandler(projectList);
+    ProjectDetailHandler projectDetailHandler = new ProjectDetailHandler(projectList);
+    ProjectUpdateHandler projectUpdateHandler = new ProjectUpdateHandler(projectList, memberListHandler);
+    ProjectDeleteHandler projectDeleteHandler = new ProjectDeleteHandler(projectList);
+
+    LinkedList<Task> taskList = new LinkedList<>();
+    TaskAddHandler taskAddHandler = new TaskAddHandler(taskList, memberListHandler);
+    TaskListHandler taskListHandler = new TaskListHandler(taskList);
+    TaskDetailHandler taskDetailHandler = new TaskDetailHandler(taskList);
+    TaskUpdateHandler taskUpdateHandler = new TaskUpdateHandler(taskList, memberListHandler);
+    TaskDeleteHandler taskDeleteHandler = new TaskDeleteHandler(taskList);
 
     loop:
       while (true) {
@@ -46,49 +81,49 @@ public class App {
         try {
           switch (command) {
             case "/member/add":
-              memberHandler.add();
+              memberAddHandler.add();
               break;
             case "/member/list":
-              memberHandler.list();
+              memberListHandler.list();
               break;
             case "/member/detail":
-              memberHandler.detail();
+              memberDetailHandler.detail();
               break;  
             case "/member/update":
-              memberHandler.update();
+              memberUpdateHandler.update();
               break; 
             case "/member/delete":
-              memberHandler.delete();
+              memberDeleteHandler.delete();
               break;
             case "/project/add":
-              projectHandler.add();
+              projectAddHandler.add();
               break;
             case "/project/list":
-              projectHandler.list();
+              projecListHandler.list();
               break;
             case "/project/detail": 
-              projectHandler.detail();
+              projectDetailHandler.detail();
               break;  
             case "/project/update":
-              projectHandler.update();
+              projectUpdateHandler.update();
               break; 
             case "/project/delete":
-              projectHandler.delete();
+              projectDeleteHandler.delete();
               break;
             case "/task/add":
-              taskHandler.add();
+              taskAddHandler.add();
               break;
             case "/task/list":
-              taskHandler.list();
+              taskListHandler.list();
               break;
             case "/task/detail": 
-              taskHandler.detail();
+              taskDetailHandler.detail();
               break;  
             case "/task/update":
-              taskHandler.update();
+              taskUpdateHandler.update();
               break; 
             case "/task/delete":
-              taskHandler.delete();
+              taskDeleteHandler.delete();
               break;
             case "/board/add":
               boardAddHandler.add();
@@ -119,11 +154,12 @@ public class App {
               System.out.println("실행할 수 없는 명령입니다.");
           }
         } catch (Exception e) {
-          System.out.println("---------------------------------");
-          System.out.printf("명령어 실행 중 오류 발생: %s\n", e.getMessage());
-          System.out.println("---------------------------------");
-          System.out.println(); // 이전 명령의 실행을 구분하기 위해 빈 줄 출력
+          System.out.println("------------------------------------------");
+          System.out.printf("명령어 실행 중 오류 발생: %s - %s\n", 
+              e.getClass().getName(), e.getMessage());
+          System.out.println("------------------------------------------");
         }
+        System.out.println(); // 이전 명령의 실행을 구분하기 위해 빈 줄 출력
       }
 
     Prompt.close();
