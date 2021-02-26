@@ -11,7 +11,8 @@ public class BoardAddHandler extends AbstractBoardHandler {
     super(boardList);
   }
 
-  public void add() {
+  @Override
+  public void service() {
     System.out.println("[게시글 등록]");
 
     Board b = new Board();
