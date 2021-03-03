@@ -5,10 +5,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.lang.reflect.Type;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -44,9 +43,8 @@ import com.eomcs.pms.handler.TaskUpdateHandler;
 import com.eomcs.util.CsvObject;
 import com.eomcs.util.Prompt;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-public class App {
+public class App01 {
 
   // 사용자가 입력한 명령을 저장할 컬렉션 객체 준비
   static ArrayDeque<String> commandStack = new ArrayDeque<>();
@@ -186,27 +184,17 @@ public class App {
       // 2) StringBuilder 객체에 보관된 값을 꺼내 자바 객체로 만든다.
       Gson gson = new Gson();
 
-      // JSON 문자열 ==> 컬렉션 객체 
-      // 1단계: 긴 코드
-      //      class MyTypeToken extends com.google.gson.reflect.TypeToken<Collection<T>> {
-      //        // 상속 받기만 하고 아무것도 구현하지 않는다.
-      //        // 어떤 타입의 정보를 다루는지 알려주기 위함이다.
+      // JSON 문자열을 배열 객체로 변환
+      T[] arr = gson.fromJson(strBuilder.toString(), arrType);
+
+      // 배열에 보관된 객체 주소를 컬렉션에 옮긴다.
+      // 방법1) 배열에 보관된 객체를 한 개씩 컬렉션에 담기
+      //      for (T obj : arr) {
+      //        list.add(obj);
       //      }
-      //      MyTypeToken typeToken = new MyTypeToken();
-      //      Type collectionType = typeToken.getType();
 
-      // 2단계: 익명 클래스 문법을 사용하여 조금 줄인 코드
-      //      TypeToken<T> typeToken = new TypeToken<Collection<T>>() {};
-      //      Type collectionType = typeToken.getType();
-
-      // 3단계: 리팩토리 기법 중에서 replace temp with query 를 적용하여 코드를 더 줄인다.
-      Type collectionType = new TypeToken<Collection<T>>() {}.getType();
-
-      // JSON 문자열을 컬렉션 객체로 변환
-      Collection<T> collection = gson.fromJson(strBuilder.toString(), collectionType);
-
-      // JSON 문자열을 읽어 만든 객체 목록을 해당 컬렉션으로 옮긴다.
-      list.addAll(collection);
+      // 방법2) Arrays.asList() 메서드를 사용하여 컬렉션 객체 만들기
+      list.addAll(Arrays.asList(arr));
 
       System.out.printf("%s 파일 데이터 로딩!\n", file.getName());
 
